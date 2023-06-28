@@ -4,7 +4,7 @@ This is just a random project I decided to make because I remember [TheCodingTra
 
 CMake Dependencies
 ==================
-Raylib v2.28.0
+SDL2 v2.28.0
 
 Build Instructions
 ==================
