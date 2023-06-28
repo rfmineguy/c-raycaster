@@ -7,6 +7,8 @@ typedef struct {
   SDL_Renderer* renderer;
   int result;
   int width, height;
+  float lastFrame, currentFrame;
+  float dt;
 } sdl_context_t;
 
 sdl_context_t sdl_initialize(int, int);

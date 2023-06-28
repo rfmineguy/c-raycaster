@@ -18,7 +18,14 @@ int ray_cast_against(ray_t ray, boundary_t boundary, int* hit_x, int* hit_y) {
   return t >= 0 && t <= 1 && u >= 0 && u <= 1;
 }
 
-void ray_update(ray_t* ray, int mousex, int mousey, int length) {
+void ray_update_angle(ray_t* ray, float angle, int length) {
+  int target_x = ray->x1 + (cos(angle) * length);
+  int target_y = ray->y1 + (sin(angle) * length);
+  ray->x2 = target_x;
+  ray->y2 = target_y;
+}
+
+void ray_update_xy(ray_t* ray, int mousex, int mousey, int length) {
   int dx = mousex - ray->x1;
   int dy = mousey - ray->y1;
   ray->x2 = mousex;
