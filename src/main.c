@@ -12,12 +12,16 @@ int main() {
     return ctx.result;
   }
 
-  ray_t ray           = (ray_t) {.x1=300, .y1=300};
-  boundary_t boundaries[5] = {0};
+  const int BOUNDARY_COUNT = 7;
+  ray_t ray = (ray_t) {.x1=300, .y1=300};
+  boundary_t boundaries[BOUNDARY_COUNT] = {0};
   boundaries[0] = (boundary_t) {.x1=130, .y1=90, .x2=130, .y2=400};
   boundaries[1] = (boundary_t) {.x1=150, .y1=90, .x2=150, .y2=400};
   boundaries[2] = (boundary_t) {.x1=130, .y1=90, .x2=190, .y2=40};
   boundaries[3] = (boundary_t) {.x1=130, .y1=40, .x2=190, .y2=90};
+  boundaries[4] = (boundary_t) {.x1=230, .y1=50, .x2=320, .y2=90};
+  boundaries[5] = (boundary_t) {.x1=430, .y1=340, .x2=190, .y2=90};
+  boundaries[6] = (boundary_t) {.x1=30,  .y1=190, .x2=135, .y2=125};
 
   // GAME LOOP
   int running = 1;
@@ -46,14 +50,16 @@ int main() {
       }
     }
 
+    // Update/Draw the ray
     int mousex, mousey;
     SDL_GetMouseState(&mousex, &mousey);
     ray_update(&ray, mousex, mousey, 10);
     ray_draw(ray, ctx);
 
-    int closest = 0;
-    int intersection_distances[4] = {INT_MAX};
-    for (int i = 0; i < 4; i++) {
+    // Figure out which boundaries were hit and which one was the closest
+    int closest = 0, has_hit = 0;
+    int intersection_distances[BOUNDARY_COUNT] = {INT_MAX};
+    for (int i = 0; i < BOUNDARY_COUNT; i++) {
       boundary_t boundary = boundaries[i];
       int hit_x, hit_y;
       if (ray_cast_against(ray, boundary, &hit_x, &hit_y)) {
@@ -64,14 +70,24 @@ int main() {
         if (intersection_distances[i] < intersection_distances[closest]) {
           closest = i;
         }
+        has_hit = 1;
       }
     }
-    printf("closest = %d\n", closest);
 
-    for (int i = 0; i < 4; i++) {
+    /*
+    for (int i = 0; i < 360; i += 60) {
+      int hit_x, hit_y;
+      if (ray_cast_against(ray, i, boundary, &hit_x, &hit_y)) {
+        ...
+      }
+    }
+    */
+
+    // Draw the boundaries
+    for (int i = 0; i < BOUNDARY_COUNT; i++) {
       boundary_t boundary = boundaries[i];
       SDL_SetRenderDrawColor(ctx.renderer, 0xff, 0x00, 0x00, 0xff);
-      if (i == closest) {
+      if (has_hit && i == closest) {
         SDL_SetRenderDrawColor(ctx.renderer, 0x00, 0xff, 0x00, 0xff);
       }
       SDL_RenderDrawLine(ctx.renderer, boundary.x1, boundary.y1, boundary.x2, boundary.y2);
