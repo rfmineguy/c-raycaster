@@ -1,11 +1,17 @@
 #include <stdio.h>
 #include <limits.h>
+#include <time.h>
 #include <SDL.h>
 #include "ray.h"
 #include "boundary.h"
 #include "sdl_context.h"
 
 #define BOUNDARY_COUNT 7
+
+int random_range_i(int lower, int upper) {
+  int random = rand() % (upper - lower);
+  return random + lower;
+}
 
 void ray_game_mouse(sdl_context_t ctx, boundary_t boundaries[BOUNDARY_COUNT]) {
   static ray_t ray = (ray_t) {};
@@ -118,13 +124,20 @@ int main() {
   }
 
   boundary_t boundaries[BOUNDARY_COUNT] = {0};
-  boundaries[0] = (boundary_t) {.x1=130, .y1=90, .x2=130, .y2=400};
-  boundaries[1] = (boundary_t) {.x1=150, .y1=90, .x2=150, .y2=400};
-  boundaries[2] = (boundary_t) {.x1=130, .y1=90, .x2=190, .y2=40};
-  boundaries[3] = (boundary_t) {.x1=130, .y1=40, .x2=190, .y2=90};
-  boundaries[4] = (boundary_t) {.x1=230, .y1=50, .x2=320, .y2=90};
-  boundaries[5] = (boundary_t) {.x1=430, .y1=340, .x2=190, .y2=90};
-  boundaries[6] = (boundary_t) {.x1=30,  .y1=190, .x2=135, .y2=125};
+  srand(time(NULL));
+  for (int i = 0; i < BOUNDARY_COUNT; i++) {
+    boundaries[i].x1 = random_range_i(0, 600);
+    boundaries[i].x2 = random_range_i(0, 600);
+    boundaries[i].y1 = random_range_i(0, 600);
+    boundaries[i].y2 = random_range_i(0, 600);
+  }
+  // boundaries[0] = (boundary_t) {.x1=130, .y1=90, .x2=130, .y2=400};
+  // boundaries[1] = (boundary_t) {.x1=150, .y1=90, .x2=150, .y2=400};
+  // boundaries[2] = (boundary_t) {.x1=130, .y1=90, .x2=190, .y2=40};
+  // boundaries[3] = (boundary_t) {.x1=130, .y1=40, .x2=190, .y2=90};
+  // boundaries[4] = (boundary_t) {.x1=230, .y1=50, .x2=320, .y2=90};
+  // boundaries[5] = (boundary_t) {.x1=430, .y1=340, .x2=190, .y2=90};
+  // boundaries[6] = (boundary_t) {.x1=30,  .y1=190, .x2=135, .y2=125};
 
   // GAME LOOP
   int running = 1;
