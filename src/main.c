@@ -73,6 +73,7 @@ void ray_game_angle(sdl_context_t ctx, boundary_t boundaries[BOUNDARY_COUNT]) {
   if (keystate[SDL_SCANCODE_Q]) dtheta_rad += 0.01f;
   if (keystate[SDL_SCANCODE_E]) dtheta_rad -= 0.01f;
 
+  // Setup rays
   for (int i = 0; i < RAY_COUNT; i++) {
     double degrees = (180.0 / RAY_COUNT) * i;
     printf("%f\n", degrees);
@@ -82,6 +83,7 @@ void ray_game_angle(sdl_context_t ctx, boundary_t boundaries[BOUNDARY_COUNT]) {
     ray_draw(rays[i], ctx);
   }
 
+  // Perform raycasting
   for (int i = 0; i < RAY_COUNT; i++) {
     int closest_boundary = -1;
     int closest_boundary_dist = INT_MAX;
@@ -103,6 +105,7 @@ void ray_game_angle(sdl_context_t ctx, boundary_t boundaries[BOUNDARY_COUNT]) {
     }
   }
 
+  // Visualize hits
   for (int i = 0; i < BOUNDARY_COUNT; i++) {
     boundary_t b = boundaries[i];
     if (b.hit) {
@@ -113,6 +116,7 @@ void ray_game_angle(sdl_context_t ctx, boundary_t boundaries[BOUNDARY_COUNT]) {
     }
     SDL_RenderDrawLine(ctx.renderer, b.x1, b.y1, b.x2, b.y2);
     boundaries[i].hit = 0;
+    boundaries[i].hit_by = -1;
   }
 }
 
@@ -123,6 +127,7 @@ int main() {
     return ctx.result;
   }
 
+  // RANDOMIZE BOUNDARIES
   boundary_t boundaries[BOUNDARY_COUNT] = {0};
   srand(time(NULL));
   for (int i = 0; i < BOUNDARY_COUNT; i++) {
@@ -131,13 +136,6 @@ int main() {
     boundaries[i].y1 = random_range_i(0, 600);
     boundaries[i].y2 = random_range_i(0, 600);
   }
-  // boundaries[0] = (boundary_t) {.x1=130, .y1=90, .x2=130, .y2=400};
-  // boundaries[1] = (boundary_t) {.x1=150, .y1=90, .x2=150, .y2=400};
-  // boundaries[2] = (boundary_t) {.x1=130, .y1=90, .x2=190, .y2=40};
-  // boundaries[3] = (boundary_t) {.x1=130, .y1=40, .x2=190, .y2=90};
-  // boundaries[4] = (boundary_t) {.x1=230, .y1=50, .x2=320, .y2=90};
-  // boundaries[5] = (boundary_t) {.x1=430, .y1=340, .x2=190, .y2=90};
-  // boundaries[6] = (boundary_t) {.x1=30,  .y1=190, .x2=135, .y2=125};
 
   // GAME LOOP
   int running = 1;
