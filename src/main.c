@@ -16,7 +16,7 @@ void ray_game_mouse(sdl_context_t ctx, boundary_t boundaries[BOUNDARY_COUNT]) {
   if (keystate[SDL_SCANCODE_S]) dy += 1;
   if (keystate[SDL_SCANCODE_A]) dx -= 1;
   if (keystate[SDL_SCANCODE_D]) dx += 1;
-  ray_move(&ray, dx, dy);
+  ray_move(&ray, dx, dy, 0);
 
   // Update/Draw the ray
   int mousex, mousey;
@@ -59,16 +59,20 @@ void ray_game_angle(sdl_context_t ctx, boundary_t boundaries[BOUNDARY_COUNT]) {
 
   // Movement
   int dx = 0, dy = 0;
+  float dtheta_rad = 0;
   if (keystate[SDL_SCANCODE_W]) dy -= 1;
   if (keystate[SDL_SCANCODE_S]) dy += 1;
   if (keystate[SDL_SCANCODE_A]) dx -= 1;
   if (keystate[SDL_SCANCODE_D]) dx += 1;
+  if (keystate[SDL_SCANCODE_Q]) dtheta_rad += 0.01f;
+  if (keystate[SDL_SCANCODE_E]) dtheta_rad -= 0.01f;
+
   for (int i = 0; i < RAY_COUNT; i++) {
     double degrees = (180.0 / RAY_COUNT) * i;
     printf("%f\n", degrees);
     double rads = degrees * (M_PI / 180.0);
     ray_update_angle(&rays[i], rads, 100);
-    ray_move(&rays[i], dx, dy);
+    ray_move(&rays[i], dx, dy, dtheta_rad);
     ray_draw(rays[i], ctx);
   }
 
@@ -91,8 +95,6 @@ void ray_game_angle(sdl_context_t ctx, boundary_t boundaries[BOUNDARY_COUNT]) {
         }
       }
     }
-    if (closest_boundary != -1)
-      boundaries[closest_boundary].hit = 1;
   }
 
   for (int i = 0; i < BOUNDARY_COUNT; i++) {

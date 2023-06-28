@@ -19,8 +19,8 @@ int ray_cast_against(ray_t ray, boundary_t boundary, int* hit_x, int* hit_y) {
 }
 
 void ray_update_angle(ray_t* ray, float angle, int length) {
-  int target_x = ray->x1 + (cos(angle) * length);
-  int target_y = ray->y1 + (sin(angle) * length);
+  int target_x = ray->x1 + (cos(ray->angle_rad + angle) * length);
+  int target_y = ray->y1 + (sin(ray->angle_rad + angle) * length);
   ray->x2 = target_x;
   ray->y2 = target_y;
 }
@@ -32,9 +32,10 @@ void ray_update_xy(ray_t* ray, int mousex, int mousey, int length) {
   ray->y2 = mousey;
 }
 
-void ray_move(ray_t* ray, int dx, int dy) {
+void ray_move(ray_t* ray, int dx, int dy, float dtheta_rad) {
   ray->x1 += dx;
   ray->y1 += dy;
+  ray->angle_rad += dtheta_rad;
 }
 
 void ray_draw(ray_t ray, sdl_context_t ctx) {
