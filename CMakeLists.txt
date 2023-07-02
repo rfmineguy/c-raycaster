@@ -4,6 +4,7 @@ project(cpp-raycaster LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
 
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O9")
 
 include(FetchContent)
 
